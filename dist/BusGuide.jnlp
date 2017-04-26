@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="BusGuide.jnlp">
+  <information>
+    <title>BusGuide</title>
+    <vendor>elvis</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="BusGuide.jar" size="7123" download="eager" />
+    <jar href="lib\GMapsFX-2.11.0.jar" size="138893" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="BusGuide" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="busguide.BusGuide"  name="BusGuide" />
+  <update check="always"/>
+</jnlp>
