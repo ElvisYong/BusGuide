@@ -59,7 +59,7 @@ public class BusGuide extends Application {
 					String busStopDesc = st.nextToken();
 					LtaBusStopCodes ltaStopCode = new LtaBusStopCodes(busStopCode, roadDesc, busStopDesc);
 					busStopCodes.add(ltaStopCode);
-					System.out.println(ltaStopCode.toString());
+					//System.out.Println(ltaStopCode); //For checking
 				}
 			}
 		} catch (IOException ex) {
@@ -68,8 +68,8 @@ public class BusGuide extends Application {
 
 		//Reads lta sbs route
 		List<LtaBusRoutes> busRoutes = new ArrayList<>();
-		File ltaSbstRoute = new File("lta-sbst_route.csv");
 
+		File ltaSbstRoute = new File("lta-sbst_route.csv");
 		try (BufferedReader br = new BufferedReader(new FileReader(ltaSbstRoute))) {
 			br.readLine();
 			StringTokenizer st;
@@ -84,19 +84,20 @@ public class BusGuide extends Application {
 					double distance = Double.parseDouble(st.nextToken());
 					LtaBusRoutes ltaRoutes = new LtaBusRoutes(serviceNum, direction, roadSeq, busStopCode, distance);
 					busRoutes.add(ltaRoutes);
+					//System.out.Println(ltaRoutes); //For checking
 				}
 			}
-		} catch(IOException ex){
+		} catch (IOException ex) {
 			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		//Reads lta bus stop LOCATION
 		List<LtaBusStopLocation> busStopLocations = new ArrayList<>();
 		File ltaBusStopLocation = new File("lta-bus_stop_locations.csv");
 		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopLocation))) {
-		br.readLine();
-		StringTokenizer st;
-		String line;
+			br.readLine();
+			StringTokenizer st;
+			String line;
 			while ((line = br.readLine()) != null) {
 				st = new StringTokenizer(line, ",");
 				while (st.hasMoreTokens()) {
@@ -106,13 +107,14 @@ public class BusGuide extends Application {
 					String busStopCode = st.nextToken();
 					LtaBusStopLocation stopLocation = new LtaBusStopLocation(x, y, zid, busStopCode);
 					busStopLocations.add(stopLocation);
-					}
+					//System.out.Println(stopLocation); //For checking
+				}
 			}
 		} catch (IOException ex) {
-		Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
-		launch(args);
+//		launch(args);
 	}
 
 }

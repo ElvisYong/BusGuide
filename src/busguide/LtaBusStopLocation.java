@@ -10,17 +10,19 @@ package busguide;
  * @author elvis
  */
 public class LtaBusStopLocation {
+
 	private double x;
 	private double y;
 	private int zid;
 	private String busStopCode;
 
-	public LtaBusStopLocation(double x, double y, int zid, String busStopCode){
+	public LtaBusStopLocation(double x, double y, int zid, String busStopCode) {
 		this.x = x;
 		this.y = y;
 		this.zid = zid;
 		this.busStopCode = busStopCode;
 	}
+
 	/**
 	 * @return the x
 	 */
@@ -76,6 +78,14 @@ public class LtaBusStopLocation {
 	public void setBusStopCode(String busStopCode) {
 		this.busStopCode = busStopCode;
 	}
-	
+
+	//For printing to check
+	@Override
+	public String toString() {
+		return getX() + "\n"
+			+ getY() + "\n"
+			+ getZid() + "\n"
+			+ getBusStopCode() + "\n";
+	}
 
 }

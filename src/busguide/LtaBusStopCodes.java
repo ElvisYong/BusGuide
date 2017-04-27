@@ -21,13 +21,6 @@ public class LtaBusStopCodes {
 		this.busStopDescription = busStopDescription;
 	}
 
-	@Override
-	public String toString() {
-		return getBusCode() + "\n"
-			+ getRoadDescription() + "\n"
-			+ getBusStopDescription();
-	}
-
 	/**
 	 * @return the busCode
 	 */
@@ -68,5 +61,13 @@ public class LtaBusStopCodes {
 	 */
 	public void setBusStopDescription(String busStopDescription) {
 		this.busStopDescription = busStopDescription;
+	}
+
+	//For printing to check
+	@Override
+	public String toString() {
+		return getBusCode() + "\n"
+			+ getRoadDescription() + "\n"
+			+ getBusStopDescription() + "\n";
 	}
 }

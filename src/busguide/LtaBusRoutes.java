@@ -10,13 +10,14 @@ package busguide;
  * @author elvis
  */
 public class LtaBusRoutes {
+
 	private String serviceNum;
 	private int direction;
 	private int routeSeq;
 	private String busStopCode;
 	private double distance;
-	
-	public LtaBusRoutes(String serviceNum, int direction, int routeSeq, String busStopCode, double distance){
+
+	public LtaBusRoutes(String serviceNum, int direction, int routeSeq, String busStopCode, double distance) {
 		this.serviceNum = serviceNum;
 		this.direction = direction;
 		this.routeSeq = routeSeq;
@@ -63,5 +64,15 @@ public class LtaBusRoutes {
 
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+
+	//For printing to check
+	@Override
+	public String toString() {
+		return getServiceNum() + "\n"
+			+ getDirection() + "\n"
+			+ getRouteSeq() + "\n"
+			+ getBusStopCode() + "\n"
+			+ getDistance() + "\n";
 	}
 }
