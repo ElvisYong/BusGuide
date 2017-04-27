@@ -66,6 +66,7 @@ public class BusGuide extends Application {
 			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
+		//Reads lta sbs route
 		List<LtaBusRoutes> busRoutes = new ArrayList<>();
 		File ltaSbstRoute = new File("lta-sbst_route.csv");
 
@@ -90,22 +91,27 @@ public class BusGuide extends Application {
 		}
 		
 		//Reads lta bus stop LOCATION
-		//File ltaBusStopLocation = new File("lta-bus_stop_locations.csv");
-		//try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopLocation))) {
-		//br.readLine();
-		//StringTokenizer st;
-		//String line;
-		//while ((line = br.readLine()) != null) {
-		//st = new StringTokenizer(line, ",");
-		//while (st.hasMoreTokens()) {
-		//System.out.println(st.nextToken());
-		//}
-		//}
-		//} catch (IOException ex) {
-		//Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
-//		}
+		List<LtaBusStopLocation> busStopLocations = new ArrayList<>();
+		File ltaBusStopLocation = new File("lta-bus_stop_locations.csv");
+		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopLocation))) {
+		br.readLine();
+		StringTokenizer st;
+		String line;
+			while ((line = br.readLine()) != null) {
+				st = new StringTokenizer(line, ",");
+				while (st.hasMoreTokens()) {
+					double x = Double.parseDouble(st.nextToken());
+					double y = Double.parseDouble(st.nextToken());
+					int zid = Integer.parseInt(st.nextToken());
+					String busStopCode = st.nextToken();
+					LtaBusStopLocation stopLocation = new LtaBusStopLocation(x, y, zid, busStopCode);
+					busStopLocations.add(stopLocation);
+					}
+			}
+		} catch (IOException ex) {
+		Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
+		}
 
-		//Reads lta sbs route
 		launch(args);
 	}
 

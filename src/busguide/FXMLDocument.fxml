@@ -5,10 +5,16 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import com.lynden.gmapsfx.GoogleMapView?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="busguide.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="500" prefWidth="750" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65" 
+	    fx:controller="busguide.FXMLDocumentController">
     <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
+        <GoogleMapView fx:id="mapView" prefHeight="500.0" prefWidth="700.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0.0"
+		       AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0"/>
+        <TextField fx:id="addressTextField" prefHeight="27.0" prefWidth="274.0" promptText="Address"
+		   AnchorPane.leftAnchor="10" AnchorPane.topAnchor="10" />
     </children>
-</AnchorPane>
+ </AnchorPane>
