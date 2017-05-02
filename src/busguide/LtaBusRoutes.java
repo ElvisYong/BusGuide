@@ -25,7 +25,7 @@ public class LtaBusRoutes {
 		this.distance = distance;
 
 	}
-
+	
 	public String getServiceNum() {
 		return serviceNum;
 	}
@@ -58,14 +58,6 @@ public class LtaBusRoutes {
 		this.busStopCode = busStopCode;
 	}
 
-	public double getDistance() {
-		return distance;
-	}
-
-	public void setDistance(double distance) {
-		this.distance = distance;
-	}
-
 	//For printing to check
 	@Override
 	public String toString() {
@@ -75,4 +67,13 @@ public class LtaBusRoutes {
 			+ getBusStopCode() + "\n"
 			+ getDistance() + "\n";
 	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
 }

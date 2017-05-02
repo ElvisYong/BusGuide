@@ -9,7 +9,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="busguide.FXMLDocumentController">
     <children>
-	    <GoogleMapView fx:id="mapView"prefHeight="750.0" prefWidth="761.0" AnchorPane.bottomAnchor="-185.0" AnchorPane.leftAnchor="0.0" 
-			   AnchorPane.rightAnchor="-441.0" AnchorPane.topAnchor="0.0"/> 
+	    <GoogleMapView fx:id="mapView" layoutX="-311.0" layoutY="-244.0" prefWidth="490.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     </children>
 </AnchorPane>

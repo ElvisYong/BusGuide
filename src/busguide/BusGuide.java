@@ -44,6 +44,8 @@ public class BusGuide extends Application {
 	public static void main(String[] args) throws IOException {
 
 		List<LtaBusStopCodes> busStopCodes = new ArrayList<>();
+		List<LtaBusRoutes> busRoutes = new ArrayList<>();
+		List<LtaBusStopLocation> busStopLocations = new ArrayList<>();
 
 		//Reads Lta Bus Stop Codes
 		File ltaBusStopCodes = new File("lta-bus_stop_codes.csv");
@@ -59,7 +61,7 @@ public class BusGuide extends Application {
 					String busStopDesc = st.nextToken();
 					LtaBusStopCodes ltaStopCode = new LtaBusStopCodes(busStopCode, roadDesc, busStopDesc);
 					busStopCodes.add(ltaStopCode);
-					//System.out.Println(ltaStopCode); //For checking
+					//System.out.println(ltaStopCode); //For checking
 				}
 			}
 		} catch (IOException ex) {
@@ -67,8 +69,6 @@ public class BusGuide extends Application {
 		}
 
 		//Reads lta sbs route
-		List<LtaBusRoutes> busRoutes = new ArrayList<>();
-
 		File ltaSbstRoute = new File("lta-sbst_route.csv");
 		try (BufferedReader br = new BufferedReader(new FileReader(ltaSbstRoute))) {
 			br.readLine();
@@ -81,10 +81,16 @@ public class BusGuide extends Application {
 					int direction = Integer.parseInt(st.nextToken());
 					int roadSeq = Integer.parseInt(st.nextToken());
 					String busStopCode = st.nextToken();
-					double distance = Double.parseDouble(st.nextToken());
+					double distance;
+					try{
+						distance = Double.parseDouble(st.nextToken());
+					}
+					catch(NumberFormatException ex){
+						distance = 0;
+					}
 					LtaBusRoutes ltaRoutes = new LtaBusRoutes(serviceNum, direction, roadSeq, busStopCode, distance);
 					busRoutes.add(ltaRoutes);
-					//System.out.Println(ltaRoutes); //For checking
+					System.out.println(ltaRoutes); //For checking
 				}
 			}
 		} catch (IOException ex) {
@@ -92,7 +98,6 @@ public class BusGuide extends Application {
 		}
 
 		//Reads lta bus stop LOCATION
-		List<LtaBusStopLocation> busStopLocations = new ArrayList<>();
 		File ltaBusStopLocation = new File("lta-bus_stop_locations.csv");
 		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopLocation))) {
 			br.readLine();
@@ -107,14 +112,14 @@ public class BusGuide extends Application {
 					String busStopCode = st.nextToken();
 					LtaBusStopLocation stopLocation = new LtaBusStopLocation(x, y, zid, busStopCode);
 					busStopLocations.add(stopLocation);
-					//System.out.Println(stopLocation); //For checking
+					//System.out.println(stopLocation); //For checking
 				}
 			}
 		} catch (IOException ex) {
 			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
 		}
-
-//		launch(args);
+		
+		launch(args);
 	}
 
 }

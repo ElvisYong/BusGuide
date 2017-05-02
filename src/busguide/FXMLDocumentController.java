@@ -6,6 +6,11 @@
 package busguide;
 
 import com.lynden.gmapsfx.GoogleMapView;
+import com.lynden.gmapsfx.MapComponentInitializedListener;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,20 +22,27 @@ import javafx.scene.control.Button;
  *
  * @author elvis
  */
-public class FXMLDocumentController implements Initializable {
-
-	@FXML
-	private Button button;
+public class FXMLDocumentController implements Initializable, MapComponentInitializedListener {
 
 	@FXML
 	private GoogleMapView mapView;
 
-	@FXML
-	private void handleButtonAction(ActionEvent event) {
-	}
+	private GoogleMap map;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		mapView.addMapInializedListener(this);
 	}
 
+	@Override
+	public void mapInitialized() {
+		MapOptions options = new MapOptions();
+
+		options.center(new LatLong(47.606189, -122.335842))
+			.zoomControl(true)
+			.zoom(12)
+			.overviewMapControl(false)
+			.mapType(MapTypeIdEnum.ROADMAP);
+		GoogleMap map = mapView.createMap(options);
+	}
 }
