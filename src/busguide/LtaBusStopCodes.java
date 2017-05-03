@@ -21,53 +21,27 @@ public class LtaBusStopCodes {
 		this.busStopDescription = busStopDescription;
 	}
 
-	/**
-	 * @return the busCode
-	 */
-	public String getBusCode() {
+	public String getBusStopCode() {
 		return busStopCode;
 	}
 
-	/**
-	 * @param busCode the busCode to set
-	 */
-	public void setBusCode(String busCode) {
-		this.busStopCode = busCode;
+	public void setBusStopCode(String busStopCode) {
+		this.busStopCode = busStopCode;
 	}
 
-	/**
-	 * @return the roadDescription
-	 */
 	public String getRoadDescription() {
 		return roadDescription;
 	}
 
-	/**
-	 * @param roadDescription the roadDescription to set
-	 */
 	public void setRoadDescription(String roadDescription) {
 		this.roadDescription = roadDescription;
 	}
 
-	/**
-	 * @return the busStopDescription
-	 */
 	public String getBusStopDescription() {
 		return busStopDescription;
 	}
 
-	/**
-	 * @param busStopDescription the busStopDescription to set
-	 */
 	public void setBusStopDescription(String busStopDescription) {
 		this.busStopDescription = busStopDescription;
-	}
-
-	//For printing to check
-	@Override
-	public String toString() {
-		return getBusCode() + "\n"
-			+ getRoadDescription() + "\n"
-			+ getBusStopDescription() + "\n";
 	}
 }

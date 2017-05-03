@@ -38,7 +38,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	public void mapInitialized() {
 		MapOptions options = new MapOptions();
 
-		options.center(new LatLong(47.606189, -122.335842))
+		options.center(new LatLong(1.3521, 103.8198))
 			.zoomControl(true)
 			.zoom(12)
 			.overviewMapControl(false)

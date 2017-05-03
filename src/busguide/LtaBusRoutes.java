@@ -15,9 +15,9 @@ public class LtaBusRoutes {
 	private int direction;
 	private int routeSeq;
 	private String busStopCode;
-	private double distance;
+	private Double distance;
 
-	public LtaBusRoutes(String serviceNum, int direction, int routeSeq, String busStopCode, double distance) {
+	public LtaBusRoutes(String serviceNum, int direction, int routeSeq, String busStopCode, Double distance) {
 		this.serviceNum = serviceNum;
 		this.direction = direction;
 		this.routeSeq = routeSeq;
@@ -68,11 +68,11 @@ public class LtaBusRoutes {
 			+ getDistance() + "\n";
 	}
 
-	public double getDistance() {
+	public Double getDistance() {
 		return distance;
 	}
 
-	public void setDistance(double distance) {
+	public void setDistance(Double distance) {
 		this.distance = distance;
 	}
 
