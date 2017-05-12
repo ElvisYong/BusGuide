@@ -42,91 +42,23 @@ public class BusGuide extends Application {
 	 * @throws java.io.IOException
 	 */
 	public static void main(String[] args) throws IOException {
+		//Instantiates readfile object to call in methods to read the csv files
+		ReadFile rf = new ReadFile();
+
+		//HashMap to store bus stop codes
+		HashMap<String, LtaBusStops> busStopCodes = new HashMap<>();
+		busStopCodes = rf.readLtaBusStops("lta-bus_stop_codes.csv");
+
+		//List to store the x, y, and ZID of the bus stop locations
+		List<LtaBusStopLocation> busStopLocations = new ArrayList<>();
+		busStopLocations = rf.readLtaBusStopLocations("lta-bus_stop_locations.csv");
 
 		//List to store bus routes that will be passed into a hashmap later
-		ArrayList<LtaBusRoutes> busRoutes = new ArrayList<>();
-		//List to store the x, y, and ZID of the bus stop locations
-		ArrayList<LtaBusStopLocation> busStopLocations = new ArrayList<>();
-
-		//List to store bus stop codes
-		HashMap<String, LtaBusStopCodes> busStopCodes = new HashMap<>();
-		HashMap<String, ArrayList<LtaBusRoutes>> busServiceMap = new HashMap<>();
-
-		//Reads Lta Bus Stop Codes and add it into a hashmap
-		File ltaBusStopCodes = new File("lta-bus_stop_codes.csv"); //Instantiates the file to read
-		//Tries to read the file using buffered reader
-		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopCodes))) {
-			br.readLine();
-			StringTokenizer st; //String tokenizer to read the csv token by token
-			String line;
-			//loops through the csv file and read it
-			while ((line = br.readLine()) != null) {
-				st = new StringTokenizer(line, ","); //using StringTokenizer's delimiter for ",". Each word as a single token.
-				//2nd while loop to loop each and every word after delimiter ","
-				while (st.hasMoreTokens()) {
-					String busStopCode = st.nextToken();
-					String roadDesc = st.nextToken();
-					String busStopDesc = st.nextToken();
-					//Creates a LtaBusStopCodes object with the data read from csv and insert into the hashmap
-					LtaBusStopCodes ltaBsStopCode = new LtaBusStopCodes(busStopCode, roadDesc, busStopDesc);
-					busStopCodes.put(ltaBsStopCode.getBusStopCode(), ltaBsStopCode);
-//					System.out.println(ltaStopCode); //For checking
-				}//End while loop for each token
-			}//End while loop
-		} catch (IOException ex) {
-			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
-		//Reads lta bus stop LOCATION and put it into a list.
-		File ltaBusStopLocation = new File("lta-bus_stop_locations.csv");
-		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopLocation))) {
-			br.readLine();
-			StringTokenizer st;
-			String line;
-			while ((line = br.readLine()) != null) {
-				st = new StringTokenizer(line, ",");
-				while (st.hasMoreTokens()) {
-					double x = Double.parseDouble(st.nextToken());
-					double y = Double.parseDouble(st.nextToken());
-					int zid = Integer.parseInt(st.nextToken());
-					String busStopCode = st.nextToken();
-					LtaBusStopLocation stopLocation = new LtaBusStopLocation(x, y, zid, busStopCode);
-					busStopLocations.add(stopLocation);
-//					System.out.println(stopLocation); //For checking
-				}
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
-		//Reads lta sbs route
-		File ltaSbstRoute = new File("lta-sbst_route.csv");
-		try (BufferedReader br = new BufferedReader(new FileReader(ltaSbstRoute))) {
-			br.readLine();
-			StringTokenizer st;
-			String line;
-			while ((line = br.readLine()) != null) {
-				st = new StringTokenizer(line, ",");
-				while (st.hasMoreTokens()) {
-					String serviceNum = st.nextToken();
-					int direction = Integer.parseInt(st.nextToken());
-					int roadSeq = Integer.parseInt(st.nextToken());
-					String busStopCode = st.nextToken();
-					Double distance;
-					try {
-						distance = Double.parseDouble(st.nextToken());
-					} 
-					catch (NumberFormatException ex) {
-						distance = null;
-					}
-					LtaBusRoutes ltaRoutes = new LtaBusRoutes(serviceNum, direction, roadSeq, busStopCode, distance);
-					busRoutes.add(ltaRoutes);
-//					System.out.println(ltaRoutes); //For checking
-				}
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(BusGuide.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		List<LtaBusRoutes> busRoutes = new ArrayList<>();
+		busRoutes = rf.readLtaBusRoutes("lta-sbst_route.csv");
+		
+		//HashMap to store the list of bus routes
+		HashMap<String, List<LtaBusRoutes>> busServiceMap = new HashMap<>();
 		//To transfer the list of bus routes into a bus service hashmap
 		for(LtaBusRoutes busInfo: busRoutes){
 			if(busServiceMap.get(busInfo.getServiceNum()) == null){
@@ -137,6 +69,19 @@ public class BusGuide extends Application {
 			busServiceMap.get(busInfo.getServiceNum()).add(lbr);
 		}
 		
+		//Creates the list of vertex and edges
+		List<Vertex> vertices = new ArrayList<>();
+		List<Edge> edges = new ArrayList<>();
+
+		//Transfer the list of bus stop location code into the vertices
+		for(LtaBusStopLocation bsLocation: busStopLocations){
+			Vertex vertex = new Vertex(bsLocation.getBusStopCode());
+			vertices.add(vertex);
+		}
+
+		
+		//TODO get the edges
+			
 		launch(args);
 	}
 
