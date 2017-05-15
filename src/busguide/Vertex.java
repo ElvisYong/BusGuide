@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class Vertex {
 
-	final private String busStopId;
+	private final String busStopId;
 
 	public Vertex(String busStopCode) {
 		busStopId = busStopCode;

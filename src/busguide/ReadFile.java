@@ -22,13 +22,14 @@ import java.util.logging.Logger;
  */
 public class ReadFile {
 
-	public HashMap<String, LtaBusStops> readLtaBusStops(String file) throws IOException {
+	public HashMap<String, BusStops> readLtaBusStops(String file, String file2) throws IOException {
 		//Reads Lta Bus Stop Codes and add it into a hashmap
-		HashMap<String, LtaBusStops> busStopMap = new HashMap<>();
+		HashMap<String, BusStops> busStopMap = new HashMap<>();
 		File ltaBusStopCodes = new File(file); //Instantiates the file to read
+		File otherFile = new File(file2);
 		//Tries to read the file using buffered reader
 		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopCodes))) {
-			br.readLine();
+			br.readLine();//To skip first line
 			StringTokenizer st; //String tokenizer to read the csv token by token
 			String line;
 			//loops through the csv file and read it
@@ -40,40 +41,36 @@ public class ReadFile {
 					String roadDesc = st.nextToken();
 					String busStopDesc = st.nextToken();
 					//Creates a LtaBusStopCodes object with the data read from csv and insert into the hashmap
-					LtaBusStops ltaBsStopCode = new LtaBusStops(busStopCode, roadDesc, busStopDesc);
+					BusStops ltaBsStopCode = new BusStops(busStopCode, roadDesc, busStopDesc);
 					busStopMap.put(ltaBsStopCode.getBusStopCode(), ltaBsStopCode);
 				}//End while loop for each token
 			}//End while loop
-			return busStopMap;
 		}
-	}
-
-	public List<LtaBusStopLocation> readLtaBusStopLocations(String file) throws IOException {
-		//Reads lta bus stop LOCATION and put it into a list.
-		List<LtaBusStopLocation> busStopLocations = new ArrayList<>();
-		File ltaBusStopLocation = new File(file);
-		try (BufferedReader br = new BufferedReader(new FileReader(ltaBusStopLocation))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(otherFile))) {
 			br.readLine();
 			StringTokenizer st;
 			String line;
 			while ((line = br.readLine()) != null) {
 				st = new StringTokenizer(line, ",");
 				while (st.hasMoreTokens()) {
-					double x = Double.parseDouble(st.nextToken());
-					double y = Double.parseDouble(st.nextToken());
+					double latitude = Double.parseDouble(st.nextToken());
+					double longitude = Double.parseDouble(st.nextToken());
 					int zid = Integer.parseInt(st.nextToken());
-					String busStopCode = st.nextToken();
-					LtaBusStopLocation stopLocation = new LtaBusStopLocation(x, y, zid, busStopCode);
-					busStopLocations.add(stopLocation);
-				}//End while loop for each token
-			}//End while loop
-			return busStopLocations;
+					BusStops bs = busStopMap.get(st.nextToken());
+					if (bs != null) {
+						bs.setX(latitude);
+						bs.setY(longitude);
+						bs.setZid(zid);
+					}
+				}
+			}
 		}
+		return busStopMap;
 	}
 
-	public List<LtaBusRoutes> readLtaBusRoutes(String file) throws IOException {
-		List<LtaBusRoutes> busRoutes = new ArrayList<>();
-		File ltaSbstRoute = new File(file);
+	public List<BusRoutes> readBusRoutes(String sbsFile, String smrtFile) throws IOException {
+		List<BusRoutes> busRoutes = new ArrayList<>();
+		File ltaSbstRoute = new File(sbsFile);
 		try (BufferedReader br = new BufferedReader(new FileReader(ltaSbstRoute))) {
 			br.readLine();
 			StringTokenizer st;
@@ -91,11 +88,34 @@ public class ReadFile {
 					} catch (NumberFormatException ex) {
 						distance = null;
 					}
-					LtaBusRoutes ltaRoutes = new LtaBusRoutes(serviceNum, direction, roadSeq, busStopCode, distance);
+					BusRoutes ltaRoutes = new BusRoutes(serviceNum, direction, roadSeq, busStopCode, distance);
 					busRoutes.add(ltaRoutes);
 				}//End while loop for each token
 			}//End while loop
-			return busRoutes;
 		}
+		File smrtBusRoute = new File(sbsFile);
+		try (BufferedReader br = new BufferedReader(new FileReader(smrtBusRoute))) {
+			br.readLine();
+			StringTokenizer st;
+			String line;
+			while ((line = br.readLine()) != null) {
+				st = new StringTokenizer(line, ",");
+				while (st.hasMoreTokens()) {
+					String serviceNum = st.nextToken();
+					int direction = Integer.parseInt(st.nextToken());
+					int roadSeq = Integer.parseInt(st.nextToken());
+					String busStopCode = st.nextToken();
+					Double distance;
+					try {
+						distance = Double.parseDouble(st.nextToken());
+					} catch (NumberFormatException ex) {
+						distance = null;
+					}
+					BusRoutes smrtRoutes = new BusRoutes(serviceNum, direction, roadSeq, busStopCode, distance);
+					busRoutes.add(smrtRoutes);
+				}//End while loop for each token
+			}//End while loop
+		}
+		return busRoutes;
 	}
 }

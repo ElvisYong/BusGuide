@@ -9,7 +9,7 @@ package busguide;
  *
  * @author elvis
  */
-public class LtaBusRoutes {
+public class BusRoutes {
 
 	private String serviceNum;
 	private int direction;
@@ -17,7 +17,7 @@ public class LtaBusRoutes {
 	private String busStopCode;
 	private Double distance;
 
-	public LtaBusRoutes(String serviceNum, int direction, int routeSeq, String busStopCode, Double distance) {
+	public BusRoutes(String serviceNum, int direction, int routeSeq, String busStopCode, Double distance) {
 		this.serviceNum = serviceNum;
 		this.direction = direction;
 		this.routeSeq = routeSeq;

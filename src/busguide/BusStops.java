@@ -5,33 +5,36 @@
  */
 package busguide;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author elvis
  */
-public class LtaBusStops {
+public class BusStops {
 
 	private String busStopCode;
 	private String roadDescription;
 	private String busStopDescription;
+	private double x;
+	private double y;
+	private int zid;
 
-	public LtaBusStops(String busStopCode, String roadDescription, String busStopDescription) {
+	public BusStops(String busStopCode, String roadDescription, String busStopDescription) {
 		this.busStopCode = busStopCode;
 		this.roadDescription = roadDescription;
 		this.busStopDescription = busStopDescription;
 	}
 
-	
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public void setZid(int zid) {
+		this.zid = zid;
+	}
 
 	public String getBusStopCode() {
 		return busStopCode;
@@ -55,6 +58,23 @@ public class LtaBusStops {
 
 	public void setBusStopDescription(String busStopDescription) {
 		this.busStopDescription = busStopDescription;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public int getZid() {
+		return zid;
+	}
+
+	@Override
+	public String toString(){
+		return busStopCode;
 	}
 
 }
