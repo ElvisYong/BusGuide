@@ -11,21 +11,21 @@ package busguide;
  */
 public class Edge {
 
-	private final Vertex source;
-	private final Vertex destination;
+	private final BusStops source;
+	private final BusStops destination;
 	private final Double weight;
 
-	public Edge(Vertex sourceBs, Vertex destinationBs, Double distance) {
+	public Edge(BusStops sourceBs, BusStops destinationBs, Double distance) {
 		source = sourceBs;
 		destination = destinationBs;
 		weight = distance;
 	}
 
-	public Vertex getSource() {
+	public BusStops getSource() {
 		return source;
 	}
 
-	public Vertex getDestination() {
+	public BusStops getDestination() {
 		return destination;
 	}
 

@@ -5,7 +5,6 @@
  */
 package busguide;
 
-import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,19 +23,19 @@ import java.util.Set;
  */
 public class DijkstraAlgorithm {
 
-	private final List<Vertex> nodes;
-	private final List<Edge> edges;
-	private Set<Vertex> settledNodes;
-	private Set<Vertex> unSettledNodes;
-	private Map<Vertex, Vertex> predecessors;
-	private Map<Vertex, Double> distance;
+	private final Set<BusStops> nodes;
+	private final Set<Edge> edges;
+	private Set<BusStops> settledNodes;
+	private Set<BusStops> unSettledNodes;
+	private Map<BusStops, BusStops> predecessors;
+	private Map<BusStops, Double> distance;
 
 	public DijkstraAlgorithm(Graph graph) {
-		this.nodes = new ArrayList<>(graph.getVertexes());
-		this.edges = new ArrayList<>(graph.getEdges());
+		this.nodes = new HashSet<>(graph.getVertexes());
+		this.edges = new HashSet<>(graph.getEdges());
 	}
 
-	public void execute(Vertex source) {
+	public void execute(BusStops source) {
 		settledNodes = new HashSet<>();
 		unSettledNodes = new HashSet<>();
 		distance = new HashMap<>();
@@ -44,16 +43,16 @@ public class DijkstraAlgorithm {
 		distance.put(source, 0.0);
 		unSettledNodes.add(source);
 		while (unSettledNodes.size() > 0) {
-			Vertex node = getMinimum(unSettledNodes);
+			BusStops node = getMinimum(unSettledNodes);
 			settledNodes.add(node);
 			unSettledNodes.remove(node);
 			findMinimalDistances(node);
 		}
 	}
 
-	private void findMinimalDistances(Vertex node) {
-		List<Vertex> adjacentNodes = getNeighbors(node);
-		for (Vertex target : adjacentNodes) {
+	private void findMinimalDistances(BusStops node) {
+		List<BusStops> adjacentNodes = getNeighbors(node);
+		for (BusStops target : adjacentNodes) {
 			if (getShortestDistance(target) > getShortestDistance(node)
 				+ getDistance(node, target)) {
 				distance.put(target, getShortestDistance(node)
@@ -64,7 +63,7 @@ public class DijkstraAlgorithm {
 		}
 	}
 
-	private double getDistance(Vertex node, Vertex target) {
+	private double getDistance(BusStops node, BusStops target) {
 		for (Edge edge : edges) {
 			if (edge.getSource().equals(node)
 				&& edge.getDestination().equals(target)) {
@@ -74,8 +73,8 @@ public class DijkstraAlgorithm {
 		throw new RuntimeException("Error");
 	}
 
-	private List<Vertex> getNeighbors(Vertex node) {
-		List<Vertex> neighbors = new ArrayList<>();
+	private List<BusStops> getNeighbors(BusStops node) {
+		List<BusStops> neighbors = new ArrayList<>();
 		for (Edge edge : edges) {
 			if (edge.getSource().equals(node)
 				&& !isSettled(edge.getDestination())) {
@@ -85,9 +84,9 @@ public class DijkstraAlgorithm {
 		return neighbors;
 	}
 
-	private Vertex getMinimum(Set<Vertex> vertexes) {
-		Vertex minimum = null;
-		for (Vertex vertex : vertexes) {
+	private BusStops getMinimum(Set<BusStops> vertexes) {
+		BusStops minimum = null;
+		for (BusStops vertex : vertexes) {
 			if (minimum == null) {
 				minimum = vertex;
 			} else if (getShortestDistance(vertex) < getShortestDistance(minimum)) {
@@ -97,11 +96,11 @@ public class DijkstraAlgorithm {
 		return minimum;
 	}
 
-	private boolean isSettled(Vertex vertex) {
+	private boolean isSettled(BusStops vertex) {
 		return settledNodes.contains(vertex);
 	}
 
-	private Double getShortestDistance(Vertex destination) {
+	private Double getShortestDistance(BusStops destination) {
 		Double d = distance.get(destination);
 		if (d == null) {
 			return Double.MAX_VALUE;
@@ -110,9 +109,9 @@ public class DijkstraAlgorithm {
 		}
 	}
 
-	public LinkedList<Vertex> getPath(Vertex target) {
-		LinkedList<Vertex> path = new LinkedList<Vertex>();
-		Vertex step = target;
+	public LinkedList<BusStops> getPath(BusStops target) {
+		LinkedList<BusStops> path = new LinkedList<BusStops>();
+		BusStops step = target;
 		// check if a path exists
 		if (predecessors.get(step) == null) {
 			return null;

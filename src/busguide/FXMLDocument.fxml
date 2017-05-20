@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.lynden.gmapsfx.GoogleMapView?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="700" prefWidth="1000" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="busguide.FXMLDocumentController">
-    <children>
-	    <GoogleMapView fx:id="mapView" layoutX="223.0" prefHeight="700.0" prefWidth="777.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="223.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <TextField layoutX="14.0" layoutY="66.0" promptText="From:" />
-      <TextField layoutX="14.0" layoutY="138.0" promptText="To:" />
-    </children>
+<AnchorPane id="AnchorPane" prefHeight="900" prefWidth="1500" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="busguide.FXMLDocumentController">
+	<children>
+		<GoogleMapView fx:id="mapView" layoutX="409.0" prefHeight="900.0" prefWidth="1101.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="409.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="0.0" />
+		<ComboBox fx:id="fromComboBox" editable="true" layoutX="14.0" layoutY="49.0" prefHeight="31.0" prefWidth="178.0" promptText="From:" />
+		<ComboBox fx:id="toComboBox" editable="true" layoutX="14.0" layoutY="98.0" prefHeight="31.0" prefWidth="178.0" promptText="To:" />
+		<Button fx:id="btnSearchRoutes" layoutX="127.0" layoutY="145.0" mnemonicParsing="false" text="Search" AnchorPane.leftAnchor="127.0" AnchorPane.topAnchor="145.0" />
+		<Text layoutX="14.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bus directions:" wrappingWidth="177.99998909235" />
+		<Text layoutX="14.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Find bus services: " wrappingWidth="177.99998909235" />
+		<ComboBox fx:id="svcComboBox" editable="true" layoutX="14.0" layoutY="238.0" prefHeight="31.0" prefWidth="178.0" promptText="Insert bus stop" />
+		<Button fx:id="btnSearchSvc" layoutX="127.0" layoutY="291.0" mnemonicParsing="false" text="Search" />
+		<ListView fx:id="svcListView" layoutX="14.0" layoutY="381.0" prefHeight="537.0" prefWidth="171.0" />
+		<Text layoutX="14.0" layoutY="369.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bus Services: " />
+		<Text layoutX="217.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bus Routes" />
+		<ComboBox fx:id="routeComboBox" editable="true" layoutX="217.0" layoutY="49.0" prefHeight="31.0" prefWidth="178.0" promptText="Service Number" />
+		<Button fx:id="btnRoute" layoutX="300.0" layoutY="98.0" mnemonicParsing="false" text="Find routes" />
+		<ListView fx:id="routeListView" layoutX="201.0" layoutY="176.0" prefHeight="746.0" prefWidth="206.0" />
+		<Text layoutX="207.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="List of bus routes: " wrappingWidth="177.99998909235" />
+	</children>
 </AnchorPane>

@@ -6,25 +6,26 @@
 package busguide;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author elvis
  */
 public class Graph {
-	private final List<Vertex> vertexes;
-	private final List<Edge> edges;
+	private final Set<BusStops> vertices;
+	private final Set<Edge> edges;
 
-	public Graph(List<Vertex> vertexes, List<Edge> edges){
-		this.vertexes = vertexes;
+	public Graph(Set<BusStops> vertices, Set<Edge> edges){
+		this.vertices = vertices;
 		this.edges = edges;
 	}
 
-	public List<Vertex> getVertexes() {
-		return vertexes;
+	public Set<BusStops> getVertexes() {
+		return vertices;
 	}
 
-	public List<Edge> getEdges() {
+	public Set<Edge> getEdges() {
 		return edges;
 	}
 	

@@ -5,6 +5,8 @@
  */
 package busguide;
 
+import java.util.Objects;
+
 /**
  *
  * @author elvis
@@ -74,7 +76,34 @@ public class BusStops {
 
 	@Override
 	public String toString(){
-		return busStopCode;
+		return roadDescription + ", " + busStopDescription + ", " + busStopCode ;
 	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 59 * hash + Objects.hashCode(this.busStopCode);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final BusStops other = (BusStops) obj;
+		if (!Objects.equals(this.busStopCode, other.busStopCode)) {
+			return false;
+		}
+		return true;
+	}
+
+
 
 }

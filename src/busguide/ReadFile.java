@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class ReadFile {
 
+	//Reads the LTA bus stops into a hashmap
 	public HashMap<String, BusStops> readLtaBusStops(String file, String file2) throws IOException {
 		//Reads Lta Bus Stop Codes and add it into a hashmap
 		HashMap<String, BusStops> busStopMap = new HashMap<>();
@@ -67,7 +68,7 @@ public class ReadFile {
 		}
 		return busStopMap;
 	}
-
+	//Reads BOTH the sbs and SMRT file and put them into a single list
 	public List<BusRoutes> readBusRoutes(String sbsFile, String smrtFile) throws IOException {
 		List<BusRoutes> busRoutes = new ArrayList<>();
 		File ltaSbstRoute = new File(sbsFile);
@@ -93,7 +94,7 @@ public class ReadFile {
 				}//End while loop for each token
 			}//End while loop
 		}
-		File smrtBusRoute = new File(sbsFile);
+		File smrtBusRoute = new File(smrtFile);
 		try (BufferedReader br = new BufferedReader(new FileReader(smrtBusRoute))) {
 			br.readLine();
 			StringTokenizer st;
