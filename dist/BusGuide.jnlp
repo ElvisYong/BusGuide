@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="BusGuide.jar" size="16073" download="eager" />
+    <jar href="BusGuide.jar" size="16806" download="eager" />
     <jar href="lib\GMapsFX-2.11.0.jar" size="138893" download="eager" />
     <jar href="lib\controlsfx-8.40.12.jar" size="996389" download="eager" />
   </resources>

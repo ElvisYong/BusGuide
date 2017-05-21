@@ -13,7 +13,9 @@ import com.lynden.gmapsfx.javascript.object.MVCArray;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.shapes.Polyline;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -54,13 +56,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	@FXML
 	private ComboBox<String> routeComboBox;
 	@FXML
-	private Button btnRoute;
-	@FXML
 	private ListView routeListView;
+	@FXML
+	private Button btnRoute;
 	@FXML
 	private Button btnSearchRoutes;
 	@FXML
 	private Button btnSearchSvc;
+	@FXML
+	private Button btnClear;
 	@FXML
 	private ListView svcListView;
 	@FXML
@@ -78,12 +82,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	private Set<BusStops> vertices;
 	private Set<Edge> edges;
 	private LinkedList<BusStops> mostShortDePath;
-
 	private Graph graph;
-	private Polyline theShortestPathYouDrawOut;
+
+	private PolylineOptions plo;
+	private Polyline polyLine;
 	private MVCArray mvcArr;
-	private Marker fromMark;
-	private Marker toMark;
+	private MarkerOptions fromMO;
+	private MarkerOptions toMO;
+	private Marker fromMarker;
+	private Marker toMarker;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -111,12 +118,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 		//Populates the list property to then bind into combobox later
 		busStopLP = new SimpleListProperty<>();
 		busStopLP.set(FXCollections.observableArrayList(busStopCodes.values()));
-		
+
 		busServiceSearchLP = new SimpleListProperty<>();
 		busServiceSearchLP.set(FXCollections.observableArrayList(busRoutes.stream().map(svc -> svc.getServiceNum())
-									.collect(Collectors.toSet())));
-		
-		
+			.collect(Collectors.toSet())));
+
 		fromComboBox.itemsProperty().bind(busStopLP);
 		toComboBox.itemsProperty().bind(busStopLP);
 		svcComboBox.itemsProperty().bind(busStopLP);
@@ -172,36 +178,85 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				mostShortDePath = dijkstra.getPath(to);
 
 				//Prints the path
-				mostShortDePath.stream().forEach(n -> {
-					System.out.println(n.getBusStopDescription());
-				});
+//				mostShortDePath.stream().forEach(n -> {
+//					System.out.println(n.getBusStopDescription());
+//				});
 
-				mostShortDePath.stream().map((busStops) -> new LatLong(busStops.getX(), busStops.getY()))
+				//Add from marker into the map
+				fromMO = new MarkerOptions();
+				fromMO.position(new LatLong(from.getY(), from.getX()));
+				fromMarker = new Marker(fromMO);
+				map.addMarker(fromMarker);
+				
+				//Add to marker into the map
+				toMO = new MarkerOptions();
+				toMO.position(new LatLong(to.getY(), to.getX()));
+				toMarker = new Marker(toMO);
+				map.addMarker(toMarker);
+
+				//MVC array that stores the paths
+				mvcArr = new MVCArray();
+				//Line settings
+				plo = new PolylineOptions();
+
+				//Push the LatLong of paths into the array
+				mostShortDePath.stream().map((busStops) -> new LatLong(busStops.getY(), busStops.getX()))
 					.forEach((latLong) -> {
 						mvcArr.push(latLong);
 					});
-				theShortestPathYouDrawOut.setPath(mvcArr);
-				map.addMapShape(theShortestPathYouDrawOut);
+
+				plo.path(mvcArr);
+				plo.strokeColor("RED");
+				plo.strokeWeight(5);
+				plo.visible(true);
+				polyLine = new Polyline(plo);
+				polyLine.setVisible(true);
+				//Draw the lines in the map
+				map.addMapShape(polyLine);
+
+			}
+		});
+		btnClear.setOnAction((ActionEvent e)->{
+			try{
+			map.removeMapShape(polyLine);
+			map.removeMarker(fromMarker);
+			map.removeMarker(toMarker);
+			}
+			catch(NullPointerException ex){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Nothing to clear");
+				alert.setHeaderText(null);
+				alert.setContentText("The map is cleaner than my mind, please search your routes first");
+				alert.showAndWait();
+			}
+
+		});
+		//btnSearchSvc listener
+		btnSearchSvc.setOnAction((ActionEvent e) -> {
+
+			BusStops bs = busStopLP.stream()
+				.filter(b -> b.toString().equals(svcComboBox.getEditor().getText()))
+				.findAny()
+				.orElse(null);
+			if (bs == null) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("No such bus stops");
+				alert.setHeaderText(null);
+				alert.setContentText("No such bus stops, input another bus stop");
+				alert.showAndWait();
+			} else {
+				busServiceLP = new SimpleListProperty<>();
+				busServiceLP.set(FXCollections.observableArrayList(busRoutes.stream()
+					.filter(br -> br.getBusStopCode().equals(bs.getBusStopCode()))
+					.map(map -> map.getServiceNum())
+					.collect(Collectors.toSet())));
+
+				svcListView.itemsProperty().bind(busServiceLP);
 			}
 		});
 
-		//btnSearchSvc listener
-		btnSearchSvc.setOnAction((ActionEvent e) -> {
-			BusStops bs = busStopLP.stream()
-				.filter(b -> b.toString().equals(svcComboBox.getEditor().getText()))
-				.findFirst()
-				.get();
-
-			busServiceLP = new SimpleListProperty<>();
-			busServiceLP.set(FXCollections.observableArrayList(busRoutes.stream()
-				.filter(br -> br.getBusStopCode().equals(bs.getBusStopCode()))
-				.map(map -> map.getServiceNum())
-				.collect(Collectors.toSet())));
-			svcListView.itemsProperty().bind(busServiceLP);
-		});
-
 		//btnRoute listener
-		btnRoute.setOnAction((ActionEvent e)->{
+		btnRoute.setOnAction((ActionEvent e) -> {
 			Set<String> routes = busRoutes.stream().filter(br -> br.getServiceNum().equals(routeComboBox.getEditor().getText()))
 				.map(map -> map.getBusStopCode())
 				.collect(Collectors.toSet());
@@ -215,6 +270,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 			busRouteLP.set(FXCollections.observableArrayList(busStops));
 			routeListView.itemsProperty().bind(busRouteLP);
 		});
+
 	}
 
 	@Override
@@ -232,7 +288,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
 		map = mapView.createMap(options);
 
-		mvcArr = new MVCArray();
 	}
 
 }
