@@ -25,6 +25,7 @@ public class BusGuide extends Application {
 		Scene scene = new Scene(root);
 
 		stage.setScene(scene);
+		stage.setTitle("Not efficient busguide with greedy algorithm that you won't follow");
 		stage.setMaximized(true);
 		stage.show();
 	}

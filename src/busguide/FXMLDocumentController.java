@@ -7,7 +7,10 @@ package busguide;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
+import com.lynden.gmapsfx.javascript.object.Animation;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MVCArray;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
@@ -56,8 +59,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	@FXML
 	private ComboBox<String> routeComboBox;
 	@FXML
-	private ListView routeListView;
-	@FXML
 	private Button btnRoute;
 	@FXML
 	private Button btnSearchRoutes;
@@ -66,7 +67,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	@FXML
 	private Button btnClear;
 	@FXML
+	private Button btnClear1;
+	@FXML
+	private Button btnClear2;
+	@FXML
 	private ListView svcListView;
+	@FXML
+	private ListView searchListView;
+	@FXML
+	private ListView routeListView;
 	@FXML
 	private GoogleMapView mapView;
 
@@ -74,6 +83,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
 	private List<BusRoutes> busRoutes;
 	private HashMap<String, BusStops> busStopCodes;
+	private ListProperty<BusStops> busSearchLP;
 	private ListProperty<BusStops> busStopLP;
 	private ListProperty<String> busServiceLP;
 	private ListProperty<String> busServiceSearchLP;
@@ -89,8 +99,14 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	private MVCArray mvcArr;
 	private MarkerOptions fromMO;
 	private MarkerOptions toMO;
+	private MarkerOptions bsMO;
 	private Marker fromMarker;
 	private Marker toMarker;
+	private Marker bsMarker;
+	private InfoWindowOptions fromWO;
+	private InfoWindowOptions toWO;
+	private InfoWindow fromInfoWindow;
+	private InfoWindow toInfoWindow;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -177,22 +193,39 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				dijkstra.execute(from);
 				mostShortDePath = dijkstra.getPath(to);
 
-				//Prints the path
-//				mostShortDePath.stream().forEach(n -> {
-//					System.out.println(n.getBusStopDescription());
-//				});
+//				Prints the path
+				Set<BusStops> searchedBS = new HashSet<>();
+				mostShortDePath.stream().forEach(n -> {
+					searchedBS.add(n);
+				});
+				busSearchLP = new SimpleListProperty();
+				busSearchLP.set(FXCollections.observableArrayList(searchedBS));
+				searchListView.itemsProperty().bind(busSearchLP);
 
 				//Add from marker into the map
 				fromMO = new MarkerOptions();
 				fromMO.position(new LatLong(from.getY(), from.getX()));
+				fromMO.animation(Animation.BOUNCE);
 				fromMarker = new Marker(fromMO);
 				map.addMarker(fromMarker);
-				
+
 				//Add to marker into the map
 				toMO = new MarkerOptions();
 				toMO.position(new LatLong(to.getY(), to.getX()));
+				toMO.animation(Animation.BOUNCE);
 				toMarker = new Marker(toMO);
 				map.addMarker(toMarker);
+
+				fromWO = new InfoWindowOptions();
+				toWO = new InfoWindowOptions();
+
+				fromWO.content("<p>" + from + "<p>");
+				fromInfoWindow = new InfoWindow(fromWO);
+				fromInfoWindow.open(map, fromMarker);
+
+				toWO.content("<p>" + to + "<p>");
+				toInfoWindow = new InfoWindow(toWO);
+				toInfoWindow.open(map, toMarker);
 
 				//MVC array that stores the paths
 				mvcArr = new MVCArray();
@@ -214,23 +247,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				//Draw the lines in the map
 				map.addMapShape(polyLine);
 
-			}
-		});
-		btnClear.setOnAction((ActionEvent e)->{
-			try{
-			map.removeMapShape(polyLine);
-			map.removeMarker(fromMarker);
-			map.removeMarker(toMarker);
-			}
-			catch(NullPointerException ex){
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Nothing to clear");
+				//Prompt the number of stops the user have to take to get to their destination
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Number of stops");
+				alert.setContentText("You have to take " + mostShortDePath.size() + "number of stops to reach your destination");
 				alert.setHeaderText(null);
-				alert.setContentText("The map is cleaner than my mind, please search your routes first");
 				alert.showAndWait();
 			}
-
 		});
+
 		//btnSearchSvc listener
 		btnSearchSvc.setOnAction((ActionEvent e) -> {
 
@@ -252,7 +277,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 					.collect(Collectors.toSet())));
 
 				svcListView.itemsProperty().bind(busServiceLP);
+
+				bsMO = new MarkerOptions();
+				bsMO.position(new LatLong(bs.getY(), bs.getX()));
+				bsMarker = new Marker(bsMO);
+				map.addMarker(bsMarker);
 			}
+
 		});
 
 		//btnRoute listener
@@ -269,6 +300,49 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 			busRouteLP = new SimpleListProperty<>();
 			busRouteLP.set(FXCollections.observableArrayList(busStops));
 			routeListView.itemsProperty().bind(busRouteLP);
+		});
+
+		btnClear.setOnAction((ActionEvent e) -> {
+			try {
+				map.removeMapShape(polyLine);
+				map.removeMarker(fromMarker);
+				map.removeMarker(toMarker);
+			} catch (NullPointerException ex) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Nothing to clear");
+				alert.setHeaderText(null);
+				alert.setContentText("The map is cleaner than my mind, please search your routes first");
+				alert.showAndWait();
+			}
+
+		});
+		btnClear1.setOnAction((ActionEvent e) -> {
+			try {
+				map.removeMapShape(polyLine);
+				map.removeMarker(fromMarker);
+				map.removeMarker(toMarker);
+			} catch (NullPointerException ex) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Nothing to clear");
+				alert.setHeaderText(null);
+				alert.setContentText("The map is cleaner than my mind, please search your routes first");
+				alert.showAndWait();
+			}
+
+		});
+		btnClear2.setOnAction((ActionEvent e) -> {
+			try {
+				map.removeMapShape(polyLine);
+				map.removeMarker(fromMarker);
+				map.removeMarker(toMarker);
+			} catch (NullPointerException ex) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Nothing to clear");
+				alert.setHeaderText(null);
+				alert.setContentText("The map is cleaner than my mind, please search your routes first");
+				alert.showAndWait();
+			}
+
 		});
 
 	}
