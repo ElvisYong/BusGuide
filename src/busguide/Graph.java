@@ -13,10 +13,11 @@ import java.util.Set;
  * @author elvis
  */
 public class Graph {
+
 	private final Set<BusStops> vertices;
 	private final Set<Edge> edges;
 
-	public Graph(Set<BusStops> vertices, Set<Edge> edges){
+	public Graph(Set<BusStops> vertices, Set<Edge> edges) {
 		this.vertices = vertices;
 		this.edges = edges;
 	}
@@ -28,5 +29,5 @@ public class Graph {
 	public Set<Edge> getEdges() {
 		return edges;
 	}
-	
+
 }

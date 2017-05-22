@@ -24,10 +24,9 @@
 		<Button fx:id="btnRoute" layoutX="300.0" layoutY="98.0" mnemonicParsing="false" text="Find routes" />
 		<ListView fx:id="routeListView" layoutX="201.0" layoutY="176.0" prefHeight="1041.0" prefWidth="206.0" />
 		<Text layoutX="207.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="List of bus routes: " wrappingWidth="177.99998909235" />
-      <Button fx:id="btnClear" layoutX="66.0" layoutY="163.0" mnemonicParsing="false" text="Clear" />
-      <Text layoutX="13.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please clear map before searching again." wrappingWidth="160.7373046875" />
-      <Button fx:id="btnClear1" layoutX="66.0" layoutY="578.0" mnemonicParsing="false" text="Clear" />
-      <Button fx:id="btnClear2" layoutX="242.0" layoutY="99.0" mnemonicParsing="false" text="Clear" />
-      <ListView fx:id="searchListView" layoutX="3.0" layoutY="207.0" prefHeight="305.0" prefWidth="195.0" />
+		<Button fx:id="btnClear" layoutX="66.0" layoutY="163.0" mnemonicParsing="false" text="Clear" />
+		<Text layoutX="13.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please clear map before searching again." wrappingWidth="160.7373046875" />
+		<Button fx:id="btnClear1" layoutX="66.0" layoutY="578.0" mnemonicParsing="false" text="Clear" />
+		<ListView fx:id="searchListView" layoutX="3.0" layoutY="207.0" prefHeight="305.0" prefWidth="195.0" />
 	</children>
 </AnchorPane>

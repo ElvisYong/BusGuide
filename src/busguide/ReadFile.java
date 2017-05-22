@@ -66,6 +66,7 @@ public class ReadFile {
 		}
 		return busStopMap;
 	}
+
 	//Reads BOTH the sbs and SMRT file and put them into a single list
 	public List<BusRoutes> readBusRoutes(String sbsFile, String smrtFile) throws IOException {
 		List<BusRoutes> busRoutes = new ArrayList<>();

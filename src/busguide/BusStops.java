@@ -75,8 +75,8 @@ public class BusStops {
 	}
 
 	@Override
-	public String toString(){
-		return roadDescription + ", " + busStopDescription + ", " + busStopCode ;
+	public String toString() {
+		return roadDescription + ", " + busStopDescription + ", " + busStopCode;
 	}
 
 	@Override
@@ -103,7 +103,5 @@ public class BusStops {
 		}
 		return true;
 	}
-
-
 
 }

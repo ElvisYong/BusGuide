@@ -69,8 +69,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	@FXML
 	private Button btnClear1;
 	@FXML
-	private Button btnClear2;
-	@FXML
 	private ListView svcListView;
 	@FXML
 	private ListView searchListView;
@@ -318,23 +316,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 		});
 		btnClear1.setOnAction((ActionEvent e) -> {
 			try {
-				map.removeMapShape(polyLine);
-				map.removeMarker(fromMarker);
-				map.removeMarker(toMarker);
-			} catch (NullPointerException ex) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Nothing to clear");
-				alert.setHeaderText(null);
-				alert.setContentText("The map is cleaner than my mind, please search your routes first");
-				alert.showAndWait();
-			}
-
-		});
-		btnClear2.setOnAction((ActionEvent e) -> {
-			try {
-				map.removeMapShape(polyLine);
-				map.removeMarker(fromMarker);
-				map.removeMarker(toMarker);
+				map.removeMarker(bsMarker);
 			} catch (NullPointerException ex) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Nothing to clear");

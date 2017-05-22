@@ -25,7 +25,7 @@ public class BusRoutes {
 		this.distance = distance;
 
 	}
-	
+
 	public String getServiceNum() {
 		return serviceNum;
 	}
