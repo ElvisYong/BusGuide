@@ -21,6 +21,7 @@ import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -42,8 +43,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import org.controlsfx.control.textfield.TextFields;
 
+//Map taken from http://rterp.github.io/GMapsFX/
 /**
  *
  * @author elvis
@@ -74,6 +77,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	private ListView searchListView;
 	@FXML
 	private ListView routeListView;
+	@FXML
+	private TextArea directionTxtArea;
+
 	@FXML
 	private GoogleMapView mapView;
 
@@ -164,6 +170,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 			}
 		}
 
+
 		graph = new Graph(vertices, edges);
 		dijkstra = new DijkstraAlgorithm(graph);
 
@@ -191,13 +198,53 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				dijkstra.execute(from);
 				mostShortDePath = dijkstra.getPath(to);
 
-//				Prints the path
-				Set<BusStops> searchedBS = new HashSet<>();
-				mostShortDePath.stream().forEach(n -> {
-					searchedBS.add(n);
-				});
+				List<String> currentStopSvc = new ArrayList<>();
+				List<String> previousStopSvc = new ArrayList<>();
+				List<String> commonBusSvc = new ArrayList<>();
+				String label = "";
+				
+				for (int i = 0; i < mostShortDePath.size(); i++) {
+					String bsc = mostShortDePath.get(i).getBusStopCode();
+					commonBusSvc = checkDuplicate(currentStopSvc, previousStopSvc);
+					currentStopSvc = busRoutes.stream()
+						.filter(br -> br.getBusStopCode().equals(bsc))
+						.map(map -> map.getServiceNum())
+						.collect(Collectors.toList());
+					if (i == 0) {
+						previousStopSvc = busRoutes.stream()
+							.filter(br -> br.getBusStopCode().equals(bsc))
+							.map(map -> map.getServiceNum())
+							.collect(Collectors.toList());
+					}
+					else if (i == mostShortDePath.size() - 1) {
+						previousStopSvc = commonBusSvc;
+						for(String svc: previousStopSvc){
+							label += "Take "+ svc +" ";
+						}
+						label += "to "+ mostShortDePath.get(i).getBusStopDescription() + "\n";
+					}
+					else if(!commonBusSvc.isEmpty()){
+						previousStopSvc = commonBusSvc;
+					}
+					else if(commonBusSvc.isEmpty()){
+						for(String svc: previousStopSvc){
+							label += "Take "+ svc + " ";
+						}
+						label += "to "+ mostShortDePath.get(i-1).getRoadDescription() +" "+
+							mostShortDePath.get(i-1).getBusStopDescription() + "\n";
+						String pBsc = mostShortDePath.get(i-1).getBusStopCode();
+						previousStopSvc = busRoutes.stream()
+						.filter(br -> br.getBusStopCode().equals(pBsc))
+						.map(map -> map.getServiceNum())
+						.collect(Collectors.toList());
+						i--;
+					}
+				}
+				System.out.println(label);
+				directionTxtArea.setText(label);
+				
 				busSearchLP = new SimpleListProperty();
-				busSearchLP.set(FXCollections.observableArrayList(searchedBS));
+				busSearchLP.set(FXCollections.observableArrayList(mostShortDePath));
 				searchListView.itemsProperty().bind(busSearchLP);
 
 				//Add from marker into the map
@@ -248,7 +295,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				//Prompt the number of stops the user have to take to get to their destination
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Number of stops");
-				alert.setContentText("You have to take " + mostShortDePath.size() + "number of stops to reach your destination");
+				alert.setContentText("You have to take " + mostShortDePath.size() + " number of stops to reach your destination");
 				alert.setHeaderText(null);
 				alert.showAndWait();
 			}
@@ -309,7 +356,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Nothing to clear");
 				alert.setHeaderText(null);
-				alert.setContentText("The map is cleaner than my mind, please search your routes first");
+				alert.setContentText("The map is clean, please search your routes first");
 				alert.showAndWait();
 			}
 
@@ -321,7 +368,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Nothing to clear");
 				alert.setHeaderText(null);
-				alert.setContentText("The map is cleaner than my mind, please search your routes first");
+				alert.setContentText("The map is cleaner, please search your routes first");
 				alert.showAndWait();
 			}
 
@@ -330,6 +377,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 	}
 
 	@Override
+
 	public void mapInitialized() {
 		MapOptions options = new MapOptions();
 
@@ -346,4 +394,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
 	}
 
+	public List<String> checkDuplicate(List<String> current, List<String> previous){
+		List<String> a = new ArrayList<>(current);
+		List<String> b = new ArrayList<>(previous);
+		b.retainAll(a);
+		
+		return b;
+	}
 }
